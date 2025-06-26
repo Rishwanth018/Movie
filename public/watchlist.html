@@ -6,8 +6,8 @@
 </head>
 <body>
     <h2 class="heading">My Watchlist</h2>
-    <button onclick="logout()" class="logoutbutton">Logout</button>
-    <button onclick="window.location.href='index.html'" class="watchlistbutton">Back to Browse</button>
+    <button onclick="logout()" class="logoutbutton card">Logout</button>
+    <button onclick="window.location.href='index.html'" class="watchlistbutton card">Back to Browse</button>
     <div id="watchlistContainer"></div>
 
     <script>
@@ -34,6 +34,7 @@
     function displayWatchlist(watchlist) {
         const container = document.getElementById("watchlistContainer");
         container.innerHTML = "";
+        container.classList.add("card");
 
         if (!watchlist.length) {
             container.innerHTML = "<p class='no-movies'>No movies saved yet!</p>";

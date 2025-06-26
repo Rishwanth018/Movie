@@ -4,7 +4,7 @@ from utils import hash_password, check_password, generate_token
 
 auth_bp = Blueprint('auth', __name__)
 
-# ✅ User Signup Route
+#User Signup Route
 @auth_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.json
@@ -23,7 +23,7 @@ def signup():
 
     return jsonify({'message': 'Signup successful'}), 201
 
-# ✅ User Login Route
+#User Login Route
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.json

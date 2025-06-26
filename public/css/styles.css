@@ -245,7 +245,7 @@ a:hover {
   letter-spacing: -0.02em;
   border-bottom: 4px solid #3b82f6; /* Blue accent */
   padding-bottom: 0.3rem;
-  animation: fadeIn 0.8s ease-in-out;
+  animation: fadeIn 1s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -308,4 +308,39 @@ a:hover {
     font-size: 1.2rem;
     color: #ff8080; /* Light red for emphasis */
     margin-top: 2rem;
+}
+.para {
+    font-family: 'Segoe UI', sans-serif;
+    animation: fadeIn 1s ease-in-out;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #b0c4de; /* Light steel blue for contrast */
+    margin-top: 0.5rem;
+}
+/*apply animation for headings and styling*/
+.headings {
+    animation: fadeIn 1s ease-in-out;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #00e0ff; /* Bright cyan for emphasis */
+    margin-bottom: 0.5rem;
+}
+.login {
+    animation: fadeIn 1s ease-in-out;
+    text-align: center;
+    font-size: 2rem;
+    color: #00e0ff; /* Bright cyan for emphasis */
+    margin-bottom: 1rem;
+    
+}
+.card{
+  animation: fadeIn 1s ease-in-out;
+}
+.text {
+    font-family: 'Segoe UI', sans-serif;
+    color: #767698; /* Light steel blue for contrast */
+    text-align: center;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    margin-left: 38rem;
 }

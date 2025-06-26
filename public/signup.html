@@ -5,14 +5,16 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h2>Sign Up</h2>
-  <form id="signupForm">
+  <h1 class="headings">Sign Up into Movie Explorer</h1>
+  
+  <form id="signupForm" class="card">
+    <h2 class="login">Sign Up</h2>
     <input type="email" id="email" placeholder="Email" required /><br>
     <input type="password" id="password" placeholder="Password" required /><br>
     <button type="submit">Create Account</button>
   </form>
   <p id="message"></p>
-  <a href="login.html">Already have an account? Login</a>
+  <a href="login.html" class="text">Already have an account? Login</a>
 
   <script>
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
