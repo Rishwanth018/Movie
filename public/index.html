@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Explorer</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <h2 class="center">Welcome to Movie Explorer</h2>
+
+  <div class="top-bar">
+    <button id="logoutBtn" class="logoutbutton">Logout</button>
+    <input type="text" id="searchInput" placeholder="Search for a movie..." class="searchbar" />
+    <button onclick="searchMovies()" class="searchbutton">Search</button>
+    <a href="watchlist.html"><button id="watchlistBtn" class="watchlistbutton">My Watchlist</button></a>
+  </div>
+
+  <div id="moviesContainer" class="movies-grid"></div>
+
+  <!-- Modal for trailer -->
+  <div id="trailerModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal">&times;</span>
+      <div id="loading" class="loading-spinner"></div>
+      <iframe id="trailerFrame" width="560" height="315" frameborder="0"
+        allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    const API_KEY = "14ea4b9e157f7120bb19ec090094b009";
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    };
+
+    const modal = document.getElementById("trailerModal");
+    const trailerFrame = document.getElementById("trailerFrame");
+    const closeModal = document.getElementById("closeModal");
+    const loading = document.getElementById("loading");
+
+    closeModal.onclick = () => {
+      trailerFrame.src = "";
+      modal.style.display = "none";
+    };
+
+    window.onclick = (event) => {
+      if (event.target == modal) {
+        trailerFrame.src = "";
+        modal.style.display = "none";
+      }
+    };
+
+    async function getTrailerUrl(movieId) {
+      try {
+        const res = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${API_KEY}`);
+        const data = await res.json();
+        const trailer = data.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+        return trailer ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&controls=1&rel=0` : null;
+      } catch (err) {
+        console.error("Error fetching trailer:", err);
+        return null;
+      }
+    }
+
+    function displayMovies(movies) {
+      const container = document.getElementById("moviesContainer");
+      container.innerHTML = "";
+
+      movies.forEach(movie => {
+        const div = document.createElement("div");
+        div.className = "movie-card";
+
+        div.innerHTML = `
+          <div class="media-container">
+            <img src="${movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : 'https://via.placeholder.com/200x300?text=No+Image'}" 
+                 alt="${movie.title}" class="movie-poster" />
+          </div>
+          <h3>${movie.title}</h3>
+          <p>${movie.overview?.substring(0, 100) || 'No overview'}...</p>
+          <button class="add-btn">Add to Watchlist</button>
+        `;
+
+        div.querySelector(".add-btn").addEventListener("click", () => {
+          addToWatchlist(movie);
+        });
+
+        div.querySelector(".movie-poster").addEventListener("click", async () => {
+          const trailerUrl = await getTrailerUrl(movie.id);
+          if (trailerUrl) {
+            loading.style.display = "block";
+            trailerFrame.style.display = "none";
+            trailerFrame.src = trailerUrl;
+            modal.style.display = "block";
+
+            trailerFrame.onload = () => {
+              loading.style.display = "none";
+              trailerFrame.style.display = "block";
+            };
+          } else {
+            alert("No trailer available for this movie.");
+          }
+        });
+
+        container.appendChild(div);
+      });
+    }
+
+    async function fetchMovies() {
+      const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`);
+      const data = await res.json();
+      displayMovies(data.results);
+    }
+
+    async function searchMovies() {
+      const query = document.getElementById("searchInput").value;
+      if (!query) return fetchMovies();
+
+      const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      displayMovies(data.results);
+    }
+
+    async function addToWatchlist(movie) {
+      const res = await fetch('/api/watchlist', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+          overview: movie.overview
+        })
+      });
+
+      const data = await res.json();
+      alert(data.message);
+    }
+
+    fetchMovies();
+  </script>
+</body>
+</html>

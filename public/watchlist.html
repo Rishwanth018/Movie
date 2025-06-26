@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Watchlist</title>
+    <link rel="stylesheet" href="css//styles.css" />
+</head>
+<body>
+    <h2>My Watchlist</h2>
+    <button onclick="logout()" class="logoutbutton">Logout</button>
+    <button onclick="window.location.href='index.html'" class="watchlistbutton">Back to Browse</button>
+    <div id="watchlistContainer"></div>
+
+    <script>
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "login.html";
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
+
+    async function loadWatchlist() {
+        const res = await fetch('/api/watchlist', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        const data = await res.json();
+        displayWatchlist(data.watchlist);
+    }
+
+    function displayWatchlist(watchlist) {
+        const container = document.getElementById("watchlistContainer");
+        container.innerHTML = "";
+
+        if (!watchlist.length) {
+            container.innerHTML = "<p>No movies saved yet!</p>";
+            return;
+        }
+
+        watchlist.forEach(movie => {
+            const div = document.createElement("div");
+            div.className = "movie-card";
+
+            div.innerHTML = `
+                <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" />
+                <h3>${movie.title}</h3>
+                <p>${movie.overview?.substring(0, 100) || 'No overview'}...</p>
+                <button onclick='removeFromWatchlist(${movie.id})' class="watchlistbutton">Remove</button>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+    async function removeFromWatchlist(movieId) {
+        const res = await fetch('/api/watchlist', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: movieId })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+        loadWatchlist();
+    }
+
+    loadWatchlist();
+    </script>
+</body>
+</html>
