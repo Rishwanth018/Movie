@@ -231,3 +231,81 @@ a:hover {
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
+/* Heading Styles */
+
+.heading {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4rem); /* Responsive size */
+  font-weight: 800;
+  color: #3ea0c4; /* Dark slate */
+  text-align: center;
+  line-height: 1.2;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  border-bottom: 4px solid #3b82f6; /* Blue accent */
+  padding-bottom: 0.3rem;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .movie-card {
+        padding: 0.5rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    .movie-poster {
+        height: 250px;
+    }
+
+    .media-container {
+        height: 200px;
+    }
+}
+@media (max-width: 480px) {
+    .movie-card {
+        padding: 0.3rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .movie-poster {
+        height: 200px;
+    }
+
+    .media-container {
+        height: 150px;
+    }
+
+    form {
+        width: 90%;
+        padding: 1rem;
+    }
+}
+
+.no-movies {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #ff8080; /* Light red for emphasis */
+    margin-top: 2rem;
+}
